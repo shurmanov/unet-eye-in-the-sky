@@ -1,8 +1,8 @@
 import PIL
 from PIL import Image
 import matplotlib.pyplot as plt
-from libtiff import TIFF
-from libtiff import TIFFfile, TIFFimage
+# from libtiff import TIFF
+# from libtiff import TIFFfile, TIFFimage
 from scipy.misc import imresize
 import numpy as np
 import math
@@ -200,12 +200,15 @@ def new_crops(img, crop_size = 512):
 # Reading, padding, cropping and making array of all the cropped images of all the trainig sat images
 trainx_list = []
 
+from skimage import io
+
 for fname in filelist_trainx[:13]:
     
     # Reading the image
-    tif = TIFF.open(fname)
-    image = tif.read_image()
-    
+    # tif = TIFF.open(fname)
+    # image = tif.read_image()
+    image = io.imread(fname)
+
     # Padding as required and cropping
     crops_list = crops(image)
     #print(len(crops_list))
@@ -221,9 +224,10 @@ trainy_list = []
 for fname in filelist_trainy[:13]:
     
     # Reading the image
-    tif = TIFF.open(fname)
-    image = tif.read_image()
-    
+    # tif = TIFF.open(fname)
+    # image = tif.read_image()
+    image = io.imread(fname)
+
     # Padding as required and cropping
     crops_list =crops(image)
     
@@ -239,8 +243,9 @@ testx_list = []
 #for fname in filelist_trainx[13]:
     
     # Reading the image
-tif = TIFF.open(filelist_trainx[13])
-image = tif.read_image()
+# tif = TIFF.open(filelist_trainx[13])
+# image = tif.read_image()
+image = io.imread(filelist_trainx[13])
     
 # Padding as required and cropping
 crops_list = crops(image)
@@ -257,9 +262,10 @@ testy_list = []
 #for fname in filelist_trainx[13]:
     
 # Reading the image
-tif = TIFF.open(filelist_trainy[13])
-image = tif.read_image()
-    
+# tif = TIFF.open(filelist_trainy[13])
+# image = tif.read_image()
+image = io.imread(filelist_trainx[13])
+
 # Padding as required and cropping
 crops_list = crops(image)
     
@@ -275,8 +281,9 @@ xtrain_list = []
 for fname in filelist_trainx:
     
     # Reading the image
-    tif = TIFF.open(fname)
-    image = tif.read_image()
+    # tif = TIFF.open(fname)
+    # image = tif.read_image()
+    image = io.imread(fname)
     
     crop_size = 128
     
@@ -293,8 +300,9 @@ for fname in filelist_trainx:
     xtrain_list.append(image)
 
 x_train = np.asarray(xtrain_list)
-tif = TIFF.open('Inter-IIT-CSRE/The-Eye-in-the-Sky-dataset/sat/14.tif')
-image = tif.read_image()
+# tif = TIFF.open('Inter-IIT-CSRE/The-Eye-in-the-Sky-dataset/sat/14.tif')
+# image = tif.read_image()
+image = io.imread('Inter-IIT-CSRE/The-Eye-in-the-Sky-dataset/sat/14.tif')
 crop_size = 128
     
 stride = 64
@@ -313,9 +321,11 @@ ytrain_list = []
 for fname in filelist_trainy:
     
     # Reading the image
-    tif = TIFF.open(fname)
-    image = tif.read_image()
-    
+    # tif = TIFF.open(fname)
+    # image = tif.read_image()
+    image = io.imread(fname)
+
+
     crop_size = 128
     
     stride = 64
@@ -333,8 +343,9 @@ for fname in filelist_trainy:
 y_train = np.asarray(ytrain_list)
 
 
-tif = TIFF.open('Inter-IIT-CSRE/The-Eye-in-the-Sky-dataset/gt/14.tif')
-image = tif.read_image()
+# tif = TIFF.open('Inter-IIT-CSRE/The-Eye-in-the-Sky-dataset/gt/14.tif')
+# image = tif.read_image()
+image = io.imread('Inter-IIT-CSRE/The-Eye-in-the-Sky-dataset/gt/14.tif')
 crop_size = 128
     
 stride = 64
@@ -348,8 +359,8 @@ n_w = int(int(w/stride))
 image = padding(image, w, h, c, crop_size, stride, n_h, n_w)
 y_train = image
 
+
 def unet(shape = (None,None,4)):
-    
     # Left side of the U-Net
     inputs = Input(shape)
 #    in_shape = inputs.shape
@@ -525,7 +536,7 @@ model.save("model_augment.h5")
 #testx = testx/np.max(testx)
 #testy = testy/np.max(testy)
 
-history = model.fit(trainx, trainy_hot, epochs=20, validation_data = (testx, testy_hot),batch_size=64, verbose=1)
+history = model.fit(trainx, trainy_hot, epochs=5, validation_data = (testx, testy_hot),batch_size=64, verbose=1)
 model.save("model_onehot.h5")
 
 

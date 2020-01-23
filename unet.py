@@ -1,8 +1,8 @@
 import PIL
 from PIL import Image
 import matplotlib.pyplot as plt
-from libtiff import TIFF
-from libtiff import TIFFfile, TIFFimage
+# from libtiff import TIFF
+# from libtiff import TIFFfile, TIFFimage
 from scipy.misc import imresize
 import numpy as np
 import glob
